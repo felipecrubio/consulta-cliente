@@ -1,34 +1,24 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { useFetch } from './hooks/useFetch';
+
+
+type Categoria = {
+  nome: string;
+}
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { data: categorias } = useFetch<Categoria[]>('https://cnctesteapl.azurewebsites.net/odata/CategoriaCliente?$select=nome&$Filter=IdEntidadeSindical/Id%20eq%206a8be2a2-2636-43d4-b9c0-002a50888604')
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
+    <ul>
+      {categorias?.map(categoria => {
+        return (
+          <li key={categoria.nome}>
+            <strong>{categoria.nome}</strong>
+          </li>
+        );
+      })}
+    </ul>
+  );
 }
 
 export default App
