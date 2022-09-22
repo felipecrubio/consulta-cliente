@@ -10,6 +10,7 @@ export function useDelete(id: string) {
   axios.delete(url, { headers })
     .then(response => console.log(response))
 
+
   return (
     console.log('deletado')
   )
