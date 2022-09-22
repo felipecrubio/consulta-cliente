@@ -29,8 +29,7 @@ export function Cadastro() {
 
     axios.post(url, dados, { headers })
       .then(response => console.log(response))
-
-    navigate('/categoria-cliente')
+      .finally(() => navigate('/categoria-cliente'))
   });
 
   return (
