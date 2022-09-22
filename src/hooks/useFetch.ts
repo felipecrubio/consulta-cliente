@@ -1,15 +1,23 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import axios, { AxiosRequestConfig } from "axios";
 
-export function useFetch<T = unknown>(url: string) {
+const api = axios.create({
+  baseURL: 'https://cnctesteapl.azurewebsites.net/odata/CategoriaCliente'
+})
+
+export function useFetch<T = unknown>(url: string, options?: AxiosRequestConfig) {
   const [data, setData] = useState<T | null>(null)
+  const [isFetching, setIsFetching] = useState(true)
 
   useEffect(() => {
-    axios.get(url)
+    api.get(url, options)
       .then(response => {
-        setData(response.data);
+        setData(response.data.value);
+      })
+      .finally(() => {
+        setIsFetching(false);
       })
   }, [])
 
-  return { data };
+  return { data, isFetching };
 }
