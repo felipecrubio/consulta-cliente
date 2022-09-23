@@ -12,7 +12,6 @@ const api = axios.create({
 })
 
 export function Lista() {
-  // const { data: categorias, isFetching } = useFetch<Categoria[]>()
   const [newParameter, setNewParameter] = useState<string>('')
 
   const useFetch = () => {

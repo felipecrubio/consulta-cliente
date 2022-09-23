@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import axios from "axios";
+import { useState } from "react";
 
 type Inputs = {
   Nome: string,
@@ -12,11 +12,12 @@ type Inputs = {
 export function Cadastro() {
   const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
 
-  const url = 'https://cnctesteapl.azurewebsites.net/odata/CategoriaCliente'
-
-  const navigate = useNavigate();
+  const [Nome, setNome] = useState<string>('');
+  const [Descricao, setDescricao] = useState<string>('');
+  const [success, setSuccess] = useState<string>('');
 
   const onSubmit = handleSubmit((data) => {
+    const url = 'https://cnctesteapl.azurewebsites.net/odata/CategoriaCliente'
     const dados = {
       'Nome': data.Nome,
       'Descricao': data.Descricao,
@@ -29,7 +30,10 @@ export function Cadastro() {
 
     axios.post(url, dados, { headers })
       .then(response => console.log(response))
-      .finally(() => navigate('/categoria-cliente'))
+      .finally(() => setSuccess('Categoria cadastrada com sucesso ✓'))
+
+    setNome('')
+    setDescricao('')
   });
 
   return (
@@ -47,6 +51,11 @@ export function Cadastro() {
               {...register("Nome", { required: true })}
               placeholder="Nome"
               className="p-2 border border-solid border-zinc-300 rounded-md"
+              value={Nome}
+              onChange={e => {
+                setNome(e.target.value)
+                setSuccess('')
+              }}
             />
             {errors.Nome && <span className="text-zinc-500 text-sm mb-2">Esse campo é obrigatório.</span>}
 
@@ -54,6 +63,11 @@ export function Cadastro() {
               {...register("Descricao")}
               placeholder="Descrição"
               className="p-2 border border-solid border-zinc-300 rounded-md"
+              value={Descricao}
+              onChange={e => {
+                setDescricao(e.target.value)
+                setSuccess('')
+              }}
               />
 
             <input
@@ -61,6 +75,7 @@ export function Cadastro() {
               value="Cadastrar"
               className="p-2 border rounded-md border-zinc-300 cursor-pointer hover:bg-white"
               />
+              <span className="text-zinc-500 text-sm mb-2">{success}</span>
           </form>
         </div>
       </div>
