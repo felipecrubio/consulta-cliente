@@ -1,5 +1,5 @@
+import { useState, useEffect } from "react";
 import { Navbar } from "../components/Navbar";
-import { useFetch } from "../hooks/useFetch"
 import axios from "axios"
 
 type Categoria = {
@@ -7,8 +7,33 @@ type Categoria = {
   Nome: string;
 }
 
+const api = axios.create({
+  baseURL: 'https://cnctesteapl.azurewebsites.net/odata/CategoriaCliente'
+})
+
 export function Lista() {
-  const { data: categorias, isFetching } = useFetch<Categoria[]>()
+  // const { data: categorias, isFetching } = useFetch<Categoria[]>()
+  const [newParameter, setNewParameter] = useState<string>('')
+
+  const useFetch = () => {
+    const url = '?$select=id,nome&$Filter=IdEntidadeSindical/Id%20eq%206a8be2a2-2636-43d4-b9c0-002a50888604'
+    const [categorias, setCategorias] = useState<Categoria[]>([])
+    const [isFetching, setIsFetching] = useState(true)
+
+    useEffect(() => {
+      api.get(url)
+      .then(response => {
+        setCategorias(response.data.value);
+      })
+      .finally(() => {
+        setIsFetching(false);
+      })
+    }), ([newParameter])
+
+    return { categorias, isFetching }
+  }
+
+  const { categorias, isFetching } = useFetch()
 
   const handleDelete = (id: string) => {
     const url = `https://cnctesteapl.azurewebsites.net/odata/CategoriaCliente(${id})`
@@ -36,6 +61,7 @@ export function Lista() {
                   <button
                     onClick={() => {
                         handleDelete(categoria.Id)
+                        setNewParameter(categoria.Id)
                       }}>
                       <i className="fa-regular fa-trash-can text-xs"></i>
                   </button>
