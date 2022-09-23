@@ -2,7 +2,7 @@
 
 <!---Esses são exemplos. Veja https://shields.io para outras pessoas ou para personalizar este conjunto de escudos. Você pode querer incluir dependências, status do projeto e informações de licença aqui--->
 
-<img src="app/assets/images/cover.png" alt="banner">
+<img src="public/images/cover.png" alt="banner">
 
 > Simples aplicação para consumir uma API OData e realizar as ações de Create, Read e Delete. Desenvolvido em React com TypeScript e utilizando Vite como bundler. Estilizado com Tailwind CSS.
 
