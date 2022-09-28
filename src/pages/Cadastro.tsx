@@ -1,7 +1,7 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Navbar } from "../components/Navbar";
 import axios from "axios";
-import { useState } from "react";
 
 type Inputs = {
   Nome: string,
