@@ -1,35 +1,38 @@
 import { useState, useEffect } from "react";
 import { Navbar } from "../components/Navbar";
 import axios from "axios";
+import { useFetch } from "../hooks/useFetch";
 
 type Categoria = {
   Id: string;
   Nome: string;
 };
 
-const api = axios.create({
-  baseURL: 'https://cnctesteapl.azurewebsites.net/odata/CategoriaCliente'
-});
+// const api = axios.create({
+//   baseURL: 'https://cnctesteapl.azurewebsites.net/odata/CategoriaCliente'
+// });
 
-const url = '?$select=id,nome&$Filter=IdEntidadeSindical/Id%20eq%206a8be2a2-2636-43d4-b9c0-002a50888604';
+// const url = '?$select=id,nome&$Filter=IdEntidadeSindical/Id%20eq%206a8be2a2-2636-43d4-b9c0-002a50888604';
 
-const getCategorias = async () => {
-  const response = await api.get(url)
-  // setCategorias(response.data.value)
-  // setIsFetching(false)
-  return response.data.value
-};
+// const getCategorias = async () => {
+//   const response = await api.get(url)
+//   // setCategorias(response.data.value)
+//   // setIsFetching(false)
+//   return response.data.value
+// };
+
+const url = 'https://cnctesteapl.azurewebsites.net/odata/CategoriaCliente?$select=id,nome&$Filter=IdEntidadeSindical/Id%20eq%206a8be2a2-2636-43d4-b9c0-002a50888604';
 
 export function Lista() {
-  const [categorias, setCategorias] = useState<Categoria[]>([]);
-  const [isFetching, setIsFetching] = useState(true);
-  const [newParameter, setNewParameter] = useState<string>('');
+  // const [categorias, setCategorias] = useState<Categoria[]>([]);
+  // const [isFetching, setIsFetching] = useState(true);
+  // const [newParameter, setNewParameter] = useState<string>('');
 
-  useEffect(() => {
-    getCategorias().then(setCategorias).finally(() => setIsFetching(false));
-  }), ([newParameter]);
+  // useEffect(() => {
+  //   getCategorias().then(setCategorias).finally(() => setIsFetching(false));
+  // }), ([newParameter]);
 
-
+  const { data: categorias } = useFetch<Categoria[]>(url);
 
   const handleDelete = (id: string) => {
     const url = `https://cnctesteapl.azurewebsites.net/odata/CategoriaCliente(${id})`;
@@ -49,7 +52,7 @@ export function Lista() {
         <div className="container p-10 max-w-[700px] border border-zinc-300 rounded-2xl shadow-xl">
           <h2 className="text-3xl mb-4">Categoria Cliente</h2>
           <ul>
-            { isFetching && <p>Carregando...</p> }
+            {/* { isFetching && <p>Carregando...</p> } */}
             {categorias?.map(categoria => {
               return (
                 <li key={categoria.Id} className="flex justify-between gap-5 p-2 border-b border-solid border-zinc-300">
