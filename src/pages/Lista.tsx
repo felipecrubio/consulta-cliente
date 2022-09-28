@@ -1,49 +1,46 @@
 import { useState, useEffect } from "react";
 import { Navbar } from "../components/Navbar";
-import axios from "axios"
+import axios from "axios";
 
 type Categoria = {
   Id: string;
   Nome: string;
-}
+};
 
 const api = axios.create({
   baseURL: 'https://cnctesteapl.azurewebsites.net/odata/CategoriaCliente'
-})
+});
+
+const url = '?$select=id,nome&$Filter=IdEntidadeSindical/Id%20eq%206a8be2a2-2636-43d4-b9c0-002a50888604';
+
+const getCategorias = async () => {
+  const response = await api.get(url)
+  // setCategorias(response.data.value)
+  // setIsFetching(false)
+  return response.data.value
+};
 
 export function Lista() {
-  const [newParameter, setNewParameter] = useState<string>('')
+  const [categorias, setCategorias] = useState<Categoria[]>([]);
+  const [isFetching, setIsFetching] = useState(true);
+  const [newParameter, setNewParameter] = useState<string>('');
 
-  const useFetch = () => {
-    const url = '?$select=id,nome&$Filter=IdEntidadeSindical/Id%20eq%206a8be2a2-2636-43d4-b9c0-002a50888604'
-    const [categorias, setCategorias] = useState<Categoria[]>([])
-    const [isFetching, setIsFetching] = useState(true)
+  useEffect(() => {
+    getCategorias().then(setCategorias).finally(() => setIsFetching(false));
+  }), ([newParameter]);
 
-    useEffect(() => {
-      api.get(url)
-      .then(response => {
-        setCategorias(response.data.value);
-      })
-      .finally(() => {
-        setIsFetching(false);
-      })
-    }), ([newParameter])
 
-    return { categorias, isFetching }
-  }
-
-  const { categorias, isFetching } = useFetch()
 
   const handleDelete = (id: string) => {
-    const url = `https://cnctesteapl.azurewebsites.net/odata/CategoriaCliente(${id})`
+    const url = `https://cnctesteapl.azurewebsites.net/odata/CategoriaCliente(${id})`;
 
     const headers = {
       'Access-Control-Allow-Origin': "https://cnctesteapl.azurewebsites.net/",
-    }
+    };
 
     axios.delete(url, { headers })
       .then(response => console.log(response))
-  }
+  };
 
   return (
     <div>
@@ -71,5 +68,5 @@ export function Lista() {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
