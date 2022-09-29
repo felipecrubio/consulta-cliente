@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
+import { useQuery, useQueryClient } from "react-query";
 import { Navbar } from "../components/Navbar";
 import axios from "axios";
-import { useFetch } from "../hooks/useFetch";
 
 type Categoria = {
   Id: string;
@@ -32,7 +32,17 @@ export function Lista() {
   //   getCategorias().then(setCategorias).finally(() => setIsFetching(false));
   // }), ([newParameter]);
 
-  const { data: categorias, loading } = useFetch<Categoria[]>(url);
+  // const { data: categorias, loading } = useFetch<Categoria[]>(url);
+
+  const { data: categorias, isFetching } = useQuery<Categoria[]>('categorias', async () => {
+    const response = await axios.get(url)
+
+    return response.data.value
+  }, {
+    staleTime: 1000 * 60 // 1 minute
+  })
+
+  const queryClient = useQueryClient();
 
   const handleDelete = (id: string) => {
     const url = `https://cnctesteapl.azurewebsites.net/odata/CategoriaCliente(${id})`;
@@ -43,6 +53,11 @@ export function Lista() {
 
     axios.delete(url, { headers })
       .then(response => console.log(response))
+      .finally(() => queryClient.setQueryData('categorias', newCategorias))
+
+    const previousCategorias = queryClient.getQueryData<Categoria[]>('categorias');
+
+    const newCategorias = previousCategorias?.filter(categoria => categoria.Id !== id);
   };
 
   return (
@@ -52,7 +67,7 @@ export function Lista() {
         <div className="container p-10 max-w-[700px] border border-zinc-300 rounded-2xl shadow-xl">
           <h2 className="text-3xl mb-4">Categoria Cliente</h2>
           <ul>
-            { loading && <p>Carregando...</p> }
+            { isFetching && <p>Carregando...</p> }
             {categorias?.map(categoria => {
               return (
                 <li key={categoria.Id} className="flex justify-between gap-5 p-2 border-b border-solid border-zinc-300">
