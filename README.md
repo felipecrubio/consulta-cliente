@@ -4,11 +4,11 @@
 
 <img src="public/images/cover.png" alt="banner">
 
-> Simples aplicação para consumir uma API OData e realizar as ações de Create, Read e Delete. Desenvolvido em React com TypeScript e utilizando Vite como bundler. Estilizado com Tailwind CSS.
+> Simples app para consumir uma API OData e realizar as ações de Create, Read e Delete. Built using React with TypeScript and Vite as package manager. Styled with Tailwind CSS. Deployed to production via Vercel.
 
 ##
 
-### Tecnologias utilizadas
+### Technologies used
 
 <div style="display: inline_block"><br>
   <img align="center" alt="Felipe-Js" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-plain.svg">
@@ -21,4 +21,4 @@
 
 ##
 
-Link ao vivo: https://consulta-cliente.vercel.app/
+Live link: https://consulta-cliente.vercel.app/
