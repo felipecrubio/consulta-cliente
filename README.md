@@ -1,10 +1,8 @@
 # consulta-cliente
 
-<!---Esses são exemplos. Veja https://shields.io para outras pessoas ou para personalizar este conjunto de escudos. Você pode querer incluir dependências, status do projeto e informações de licença aqui--->
-
 <img src="public/images/cover.png" alt="banner">
 
-> Simples app para consumir uma API OData e realizar as ações de Create, Read e Delete. Built using React with TypeScript and Vite as package manager. Styled with Tailwind CSS. Deployed to production via Vercel.
+> Simple app to consume an OData API and perform Create, Read, and Delete actions. Built using React with TypeScript and Vite as package manager. Styled with Tailwind CSS. Deployed to production via Vercel.
 
 ##
 
