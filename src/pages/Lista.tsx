@@ -25,14 +25,14 @@ const url = 'https://cnctesteapl.azurewebsites.net/odata/CategoriaCliente?$selec
 
 export function Lista() {
   // const [categorias, setCategorias] = useState<Categoria[]>([]);
-  // const [isFetching, setIsFetching] = useState(true);
+  // const [loading, setLoading] = useState(true);
   // const [newParameter, setNewParameter] = useState<string>('');
 
   // useEffect(() => {
   //   getCategorias().then(setCategorias).finally(() => setIsFetching(false));
   // }), ([newParameter]);
 
-  const { data: categorias } = useFetch<Categoria[]>(url);
+  const { data: categorias, loading } = useFetch<Categoria[]>(url);
 
   const handleDelete = (id: string) => {
     const url = `https://cnctesteapl.azurewebsites.net/odata/CategoriaCliente(${id})`;
@@ -52,7 +52,7 @@ export function Lista() {
         <div className="container p-10 max-w-[700px] border border-zinc-300 rounded-2xl shadow-xl">
           <h2 className="text-3xl mb-4">Categoria Cliente</h2>
           <ul>
-            {/* { isFetching && <p>Carregando...</p> } */}
+            { loading && <p>Carregando...</p> }
             {categorias?.map(categoria => {
               return (
                 <li key={categoria.Id} className="flex justify-between gap-5 p-2 border-b border-solid border-zinc-300">
@@ -60,7 +60,6 @@ export function Lista() {
                   <button
                     onClick={() => {
                         handleDelete(categoria.Id)
-                        setNewParameter(categoria.Id)
                       }}>
                       <i className="fa-regular fa-trash-can text-xs"></i>
                   </button>
