@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Navbar } from "../components/Navbar";
+import { useQueryClient } from "react-query";
 import axios from "axios";
 
 type Inputs = {
@@ -16,6 +17,8 @@ export function Cadastro() {
   const [Descricao, setDescricao] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
 
+  const queryClient = useQueryClient();
+
   const onSubmit = handleSubmit((data) => {
     const url = 'https://cnctesteapl.azurewebsites.net/odata/CategoriaCliente'
     const dados = {
@@ -30,7 +33,10 @@ export function Cadastro() {
 
     axios.post(url, dados, { headers })
       .then(response => console.log(response))
-      .finally(() => setSuccess('Categoria cadastrada com sucesso ✓'))
+      .finally(() => {
+        setSuccess('Categoria cadastrada com sucesso ✓')
+        queryClient.invalidateQueries('categorias')
+      })
 
     setNome('')
     setDescricao('')

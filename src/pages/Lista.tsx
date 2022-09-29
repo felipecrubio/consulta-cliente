@@ -1,49 +1,64 @@
 import { useState, useEffect } from "react";
+import { useQuery, useQueryClient } from "react-query";
 import { Navbar } from "../components/Navbar";
-import axios from "axios"
+import axios from "axios";
 
 type Categoria = {
   Id: string;
   Nome: string;
-}
+};
 
-const api = axios.create({
-  baseURL: 'https://cnctesteapl.azurewebsites.net/odata/CategoriaCliente'
-})
+// const api = axios.create({
+//   baseURL: 'https://cnctesteapl.azurewebsites.net/odata/CategoriaCliente'
+// });
+
+// const url = '?$select=id,nome&$Filter=IdEntidadeSindical/Id%20eq%206a8be2a2-2636-43d4-b9c0-002a50888604';
+
+// const getCategorias = async () => {
+//   const response = await api.get(url)
+//   // setCategorias(response.data.value)
+//   // setIsFetching(false)
+//   return response.data.value
+// };
+
+const url = 'https://cnctesteapl.azurewebsites.net/odata/CategoriaCliente?$select=id,nome&$Filter=IdEntidadeSindical/Id%20eq%206a8be2a2-2636-43d4-b9c0-002a50888604';
 
 export function Lista() {
-  const [newParameter, setNewParameter] = useState<string>('')
+  // const [categorias, setCategorias] = useState<Categoria[]>([]);
+  // const [loading, setLoading] = useState(true);
+  // const [newParameter, setNewParameter] = useState<string>('');
 
-  const useFetch = () => {
-    const url = '?$select=id,nome&$Filter=IdEntidadeSindical/Id%20eq%206a8be2a2-2636-43d4-b9c0-002a50888604'
-    const [categorias, setCategorias] = useState<Categoria[]>([])
-    const [isFetching, setIsFetching] = useState(true)
+  // useEffect(() => {
+  //   getCategorias().then(setCategorias).finally(() => setIsFetching(false));
+  // }), ([newParameter]);
 
-    useEffect(() => {
-      api.get(url)
-      .then(response => {
-        setCategorias(response.data.value);
-      })
-      .finally(() => {
-        setIsFetching(false);
-      })
-    }), ([newParameter])
+  // const { data: categorias, loading } = useFetch<Categoria[]>(url);
 
-    return { categorias, isFetching }
-  }
+  const { data: categorias, isFetching } = useQuery<Categoria[]>('categorias', async () => {
+    const response = await axios.get(url)
 
-  const { categorias, isFetching } = useFetch()
+    return response.data.value
+  }, {
+    staleTime: 1000 * 60 // 1 minute
+  })
+
+  const queryClient = useQueryClient();
 
   const handleDelete = (id: string) => {
-    const url = `https://cnctesteapl.azurewebsites.net/odata/CategoriaCliente(${id})`
+    const url = `https://cnctesteapl.azurewebsites.net/odata/CategoriaCliente(${id})`;
 
     const headers = {
       'Access-Control-Allow-Origin': "https://cnctesteapl.azurewebsites.net/",
-    }
+    };
 
     axios.delete(url, { headers })
       .then(response => console.log(response))
-  }
+      .finally(() => queryClient.setQueryData('categorias', newCategorias))
+
+    const previousCategorias = queryClient.getQueryData<Categoria[]>('categorias');
+
+    const newCategorias = previousCategorias?.filter(categoria => categoria.Id !== id);
+  };
 
   return (
     <div>
@@ -60,7 +75,6 @@ export function Lista() {
                   <button
                     onClick={() => {
                         handleDelete(categoria.Id)
-                        setNewParameter(categoria.Id)
                       }}>
                       <i className="fa-regular fa-trash-can text-xs"></i>
                   </button>
@@ -71,5 +85,5 @@ export function Lista() {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
